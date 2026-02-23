@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
 from core.blockchain import Blockchain
 from config import HOST, PORT
-from core import state, mempool
+from core.state import State
+from core.mempool import Mempool
 
 app = Flask(__name__)
-blockchain = Blockchain(state, mempool)
+blockchain = Blockchain(State, Mempool)
 
 def serialize_block(block):
     return {
@@ -54,7 +55,10 @@ def mine():
     return jsonify({
         "status": "Mining started",
         "miner": miner_address
-    }), 200
+    }), 200 or jsonify({
+        "status": "there r no transactions in chain to mine",
+        "miner": miner_address
+    }),200
 
 
 def start_rpc():

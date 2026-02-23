@@ -1,0 +1,15 @@
+{
+  "chain": [
+    {
+      "difficulty": 4,
+      "hash": "000084ad6f724071b2f1554d7138125addd30608798df501812a7cdb22451f50",
+      "index": 0,
+      "merkle_root": "2e1cfa82b035c26cbbbdae632cea070514eb8b773f616aaeaf668e2f0be8f10d",
+      "nonce": 18215,
+      "previous_hash": "0",
+      "timestamp": 1771845344.7497795,
+      "transactions": []
+    }
+  ],
+  "length": 1
+}

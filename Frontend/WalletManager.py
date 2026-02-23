@@ -68,6 +68,6 @@ class WalletManager:
 
         self.current_wallet = self.wallets[username]
         return {"status": "Logged in", "address": self.current_wallet["address"]}
-
+    
     def logout(self):
         self.current_wallet = None

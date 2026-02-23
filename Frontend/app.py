@@ -6,6 +6,7 @@ from WalletManager import WalletManager
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
+balance = 0
 
 class WalletApp(ctk.CTk):
 
@@ -61,7 +62,7 @@ class WalletApp(ctk.CTk):
 
         self.balance_label = ctk.CTkLabel(
             self.balance_card,
-            text="Balance: 0 MBT",
+            text= f"Balance: {balance} MBT" or "Balance: 0 MBT",
             font=("Arial", 24, "bold")
         )
         self.balance_label.pack(pady=15)
@@ -209,7 +210,7 @@ class WalletApp(ctk.CTk):
 
     def download_chain(self):
         chain = get_chain()
-        with open("blockchain_download.json", "w") as f:
+        with open("Frontend/blockchain.json", "w") as f:
             json.dump(chain, f, indent=2)
 
         self.output_box.insert("end", "Blockchain refreshed\n")
