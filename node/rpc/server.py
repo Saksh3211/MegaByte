@@ -5,7 +5,7 @@ from core.state import State
 from core.mempool import Mempool
 
 app = Flask(__name__)
-blockchain = Blockchain(State, Mempool)
+blockchain = Blockchain(State(), Mempool())
 
 def serialize_block(block):
     return {

@@ -49,20 +49,33 @@ class WalletApp(ctk.CTk):
         self.login_status = ctk.CTkLabel(container, text="")
         self.login_status.pack(pady=10)
 
-    # =====================================================
     # MAIN APP UI
-    # =====================================================
 
     def show_main_app(self):
         self.clear_window()
 
-        # Top balance card
-        self.balance_card = ctk.CTkFrame(self, height=140)
+        self.balance_card = ctk.CTkFrame(self, corner_radius=15)
         self.balance_card.pack(fill="x", padx=20, pady=20)
+
+        top_bar = ctk.CTkFrame(self.balance_card, fg_color="transparent")
+        top_bar.pack(fill="x", pady=5, padx=10)
+
+        ctk.CTkButton(top_bar, text="Refresh",
+                    width=100,
+                    command=self.refresh_balance).pack(side="right", padx=5)
+
+        ctk.CTkButton(top_bar, text="Switch Wallet",
+                    width=120,
+                    command=self.logout).pack(side="right", padx=5)
+        
+        ctk.CTkButton(self.balance_card,
+              text="Copy Address",
+              command=lambda: self.clipboard_append(self.wallet["address"])
+              ).pack(pady=5)
 
         self.balance_label = ctk.CTkLabel(
             self.balance_card,
-            text= f"Balance: {balance} MBT" or "Balance: 0 MBT",
+            text="Balance: 0 MBT",
             font=("Arial", 24, "bold")
         )
         self.balance_label.pack(pady=15)
@@ -74,7 +87,8 @@ class WalletApp(ctk.CTk):
         )
         self.address_label.pack()
 
-        # Tabs
+        self.refresh_balance()
+
         self.tabs = ctk.CTkTabview(self)
         self.tabs.pack(expand=True, fill="both", padx=20, pady=10)
 
@@ -88,23 +102,19 @@ class WalletApp(ctk.CTk):
         self.build_mine_tab()
         self.build_settings_tab()
 
-    # =====================================================
-    # TAB BUILDERS
-    # =====================================================
-
+    
     def build_home_tab(self):
         ctk.CTkLabel(self.home_tab,
-                     text="Welcome to MegaByte",
-                     font=("Arial", 18)).pack(pady=20)
+                    text="Blockchain Explorer",
+                    font=("Arial", 18)).pack(pady=10)
 
-        self.refresh_btn = ctk.CTkButton(
+        ctk.CTkButton(
             self.home_tab,
-            text="Refresh Blockchain",
+            text="Download Latest Chain",
             command=self.download_chain
-        )
-        self.refresh_btn.pack(pady=10)
+        ).pack(pady=5)
 
-        self.output_box = ctk.CTkTextbox(self.home_tab, height=200)
+        self.output_box = ctk.CTkTextbox(self.home_tab)
         self.output_box.pack(pady=10, padx=20, fill="both", expand=True)
 
     def build_send_tab(self):
@@ -151,10 +161,6 @@ class WalletApp(ctk.CTk):
             width=200
         ).pack(pady=10)
 
-    # =====================================================
-    # AUTH METHODS
-    # =====================================================
-
     def create_wallet(self):
         username = self.username_entry.get()
         password = self.password_entry.get()
@@ -194,6 +200,7 @@ class WalletApp(ctk.CTk):
 
         result = mine_block(self.wallet["address"])
         self.output_box.insert("end", json.dumps(result, indent=2) + "\n")
+        self.refresh_balance()
 
     def send_tx(self):
         if not self.wallet:
@@ -202,11 +209,17 @@ class WalletApp(ctk.CTk):
         tx = {
             "sender": self.wallet["address"],
             "receiver": self.receiver_entry.get(),
-            "amount": self.amount_entry.get()
+            "amount": self.amount_entry.get(),
+            "nonce": 1
         }
 
         result = send_transaction(tx)
         self.output_box.insert("end", json.dumps(result, indent=2) + "\n")
+
+        self.receiver_entry.delete(0, "end")
+        self.amount_entry.delete(0, "end")
+
+        self.refresh_balance()
 
     def download_chain(self):
         chain = get_chain()
@@ -223,6 +236,36 @@ class WalletApp(ctk.CTk):
         for widget in self.winfo_children():
             widget.destroy()
 
+    def refresh_balance(self):
+        balance = self.calculate_balance()
+        self.balance_label.configure(text=f"Balance: {balance} MBT")
+
+    def calculate_balance(self):
+        if not self.wallet:
+            return 0
+
+        data = get_chain()
+
+        # If backend returns { "chain": [...], "length": X }
+        if isinstance(data, dict) and "chain" in data:
+            chain = data["chain"]
+        else:
+            chain = data
+
+        address = self.wallet["address"]
+        balance = 0
+
+        for block in chain:
+            if not isinstance(block, dict):
+                continue
+
+            for tx in block.get("transactions", []):
+                if tx.get("receiver") == address:
+                    balance += float(tx.get("amount", 0))
+                if tx.get("sender") == address:
+                    balance -= float(tx.get("amount", 0))
+
+        return balance
 
 if __name__ == "__main__":
     app = WalletApp()

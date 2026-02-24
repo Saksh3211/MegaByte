@@ -4,5 +4,11 @@
         "address": "5f7e5fdc2ca3574f526380d314798bed401539310af416766bd0ecb92df8e8d2",
         "private_key": "b8c10f163dcf639d2bf36663cdca527be48a77381cfcdd1be5bddfea3b668134",
         "public_key": "42cdf1f4a1cb9ac0285aa0d260350139a09a3865f2ab0a03321782c615b76307"
+    },
+    "cba": {
+        "password": "8d23cf6c86e834a7aa6eded54c26ce2bb2e74903538c61bdd5d2197997ab2f72",
+        "address": "3b3e88acd438c71642e823bee050f2a0696d0217fbc38cd6076c9345d819d289",
+        "private_key": "60014edde9eb3ceee638b19c271b89ccbcf36734573adac887e64306c461388f",
+        "public_key": "cc4d66f02b0e90d1a2411a0ea2c429f6219768d5260f0959e88e5b1fc8d851cf"
     }
 }

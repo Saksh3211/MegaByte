@@ -9,11 +9,11 @@ class State:
     def get_nonce(self, address):
         return self.nonces.get(address, 0)
 
-    def apply_transaction(self, tx):
+    def apply_transaction(self, tx:dict):
         sender = tx["sender"]
         receiver = tx["receiver"]
-        amount = tx["amount"]
-        nonce = tx["nonce"]
+        amount = tx.get("amount",0)
+        nonce = tx.get("nonce",0)
 
         if sender != "NETWORK":
             if self.get_balance(sender) < amount:

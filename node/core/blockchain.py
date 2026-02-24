@@ -8,8 +8,8 @@ from consensus.difficulty import adjust_difficulty
 class Blockchain:
     def __init__(self, state, mempool):
         self.chain = []
-        self.state = state()
-        self.mempool = mempool()
+        self.state = state
+        self.mempool = mempool
         self.last_block_time = time.time()
         self.create_genesis()
         self.mining = False
