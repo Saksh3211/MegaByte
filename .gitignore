@@ -2,4 +2,4 @@
 __pycache__/
 *.pyc
 blockchain.db
-wallet.json
+wallets.json
