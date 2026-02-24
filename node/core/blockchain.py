@@ -8,12 +8,13 @@ from consensus.difficulty import adjust_difficulty
 class Blockchain:
     def __init__(self, state, mempool):
         self.chain = []
-        self.state = state
-        self.mempool = mempool
+        self.state = state()
+        self.mempool = mempool()
         self.last_block_time = time.time()
         self.create_genesis()
         self.mining = False
         self.difficulty = DIFFICULTY
+        self.accounts = {}
 
     def create_genesis(self):
         genesis = Block(0, [], "0", DIFFICULTY)
@@ -64,3 +65,14 @@ class Blockchain:
         thread = threading.Thread(target=self.mine_loop, args=(miner_address,))
         thread.daemon = True
         thread.start()
+    
+    def update_balances(self, transactions):
+        for tx in transactions:
+            sender = tx["sender"]
+            receiver = tx["receiver"]
+            amount = int(tx["amount"])
+
+            if sender != "NETWORK":
+                self.accounts[sender] = self.accounts.get(sender, 0) - amount
+
+            self.accounts[receiver] = self.accounts.get(receiver, 0) + amount

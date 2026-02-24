@@ -55,11 +55,7 @@ def mine():
     return jsonify({
         "status": "Mining started",
         "miner": miner_address
-    }), 200 or jsonify({
-        "status": "there r no transactions in chain to mine",
-        "miner": miner_address
-    }),200
-
+    }), 200
 
 def start_rpc():
     app.run(host=HOST, port=PORT)
