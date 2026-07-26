@@ -1,1 +1,7 @@
 wallet.dat
+
+/build/
+*.exe
+*.obj
+*.o
+*.log

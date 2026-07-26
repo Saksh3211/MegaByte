@@ -1,3 +1,0 @@
-C:/MegaByte/build/CMakeFiles/megabyte_node.dir
-C:/MegaByte/build/CMakeFiles/ALL_BUILD.dir
-C:/MegaByte/build/CMakeFiles/ZERO_CHECK.dir
